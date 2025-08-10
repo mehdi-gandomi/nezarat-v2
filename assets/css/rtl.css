@@ -1,0 +1,87 @@
+@media (min-width: 768px) {
+    [dir=rtl] .sidebar.sidebar-fixed:not(.sidebar-end) {
+      right: 0;
+    }
+    [dir=rtl] .sidebar.hide:not(.sidebar-end) {
+        margin-right: calc(-1 * var(--cui-sidebar-width));
+      }
+      [dir=rtl] .dropstart .dropdown-menu[data-coreui-popper]{
+
+        left: 100% !important;
+        right: auto !important;
+
+        margin-left: var(--cui-dropdown-spacer);
+      }
+  }
+  @media(max-width:768px){
+	    [dir=rtl] .sidebar.hide:not(.sidebar-end) {
+        margin-right: calc(-1 * var(--cui-sidebar-width));
+      }
+      [dir=rtl] .dropstart .dropdown-menu[data-coreui-popper]{
+
+        left: 100% !important;
+        right: auto !important;
+
+        margin-left: var(--cui-dropdown-spacer);
+      }
+  }
+  [dir=rtl] #crudTable_wrapper #crudTable thead > tr > th:not(.sorting_disabled),
+   [dir=rtl] #crudTable_wrapper #crudTable thead > tr > td,
+   [dir=rtl] #crudTable_wrapper table.dataTable thead > tr > th:not(.sorting_disabled),
+   [dir=rtl] #crudTable_wrapper table.dataTable thead > tr > td{
+
+  }
+  [dir=rtl] table.dataTable thead th,
+  [dir=rtl] table.dataTable thead td,
+  [dir=rtl] table.dataTable tfoot th,
+  [dir=rtl] table.dataTable tfoot td{
+     text-align:right !important;
+  }
+  [dir=rtl] .header-operation{
+    justify-content: space-between;
+  }
+[dir=rtl] .breadcrumb-item + .breadcrumb-item{
+    padding-right: var(--cui-breadcrumb-item-padding-x) !important;
+    padding-left: unset !important;
+}
+
+[dir=rtl] .breadcrumb-item + .breadcrumb-item::before {
+    float: right;
+  padding-right: unset !important;
+  padding-left: var(--cui-breadcrumb-item-padding-x);
+}
+@media (max-width: 767.98px) {
+    [dir=rtl] .sidebar:not(.sidebar-end) {
+      right: 0;
+      left: unset !important;
+    }
+    [dir=rtl] .sidebar:not(.sidebar-end):not(.show) {
+        margin-right: calc(-1 * var(--cui-sidebar-width));
+        margin-left: unset !important;
+      }
+  }
+
+  .dropstart .dropdown-menu[data-coreui-popper] {
+
+    left: 100% !important;
+    right: auto !important;
+
+  }
+[dir=rtl] .dropdown-menu[data-coreui-popper]{
+  right:0;
+  left:unset !important;
+}
+[dir=rtl] .select2-results__option{
+  text-align:right;
+}
+[dir=rtl] .swal-text{
+    text-align:right !important;
+}
+[dir=rtl] .accordion-button::after{
+    margin-right: auto;
+    margin-left: unset !important;
+}
+.filepond--root,
+.filepond--root .filepond--drop-label {
+  height: 200px;
+}

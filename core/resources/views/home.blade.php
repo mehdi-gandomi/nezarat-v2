@@ -1,0 +1,210 @@
+@extends('layouts.main')
+
+@section('content')
+<div id="modal-container">
+    <div class="modal-background">
+      <div class="modal">
+       <div class="modal-body">
+        <img class="wish-img" alt="" id="wishImg">
+        <div class="text-box">
+            <a href="#" class="btn btn-white btn-				 animate">برآورده میکنم</a>
+        </div>
+       </div>
+        <svg class="modal-svg" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="none">
+                                  <rect x="0" y="0" fill="none" width="100%" height="100%" rx="3" ry="3"></rect>
+                              </svg>
+      </div>
+    </div>
+  </div>
+  <model-viewer camera-orbit="0deg 75deg 4m" class="model" onload="onModelLoaded(this)" zoom-sensitivity="0.5" src="./assets/tree.glb" camera-controls tone-mapping="commerce" poster="./assets/images/tree.webp"
+  shadow-intensity="1">
+  <div class="ring-container" slot="hotspot-1" onclick="showWish('1')"
+      data-position="-0.21426057796170223m 3.2932540087556577m 1.8376519983608668m"
+      data-normal="-0.3973449699382622m -0.08021860143373208m 0.914156414870441m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-3" onclick="showWish('3')"
+      data-position="0.894286148231413m 3.850267794219853m 1.314070174415981m"
+      data-normal="-0.3973449699382622m -0.08021860143373208m 0.914156414870441m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-5" onclick="showWish('5')"
+      data-position="-0.2195084720849207m 2.274051632869702m 2.212941908843555m"
+      data-normal="-0.4450803746557219m 0.0468904099538202m 0.894262125749875m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-6" onclick="showWish('6')"
+      data-position="-1.4800673862586815m 2.985314698819175m 1.4822577180449659m"
+      data-normal="-0.9896461666819046m 0.14344747999162213m 0.0048254798585269775m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-7" onclick="showWish('7')"
+      data-position="-1.9044469610216372m 2.6443790823659628m 0.5008757740079943m"
+      data-normal="-0.9888842492128557m 0.05410333764689279m -0.13849465879301393m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-8" onclick="showWish('8')"
+      data-position="-1.7023439717611921m 3.0297168871303337m -0.8633808932662272m"
+      data-normal="-0.7347202823384515m 0.11755651851950441m -0.6681067068021991m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-9" onclick="showWish('9')"
+      data-position="-1.2267744203885986m 3.65397712096203m -1.2284179788206286m"
+      data-normal="-0.6288286367877359m 0.5378121952465401m -0.5615448229658743m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-10" onclick="showWish('10')"
+      data-position="0.030749372120544516m 3.4576941019254086m -1.7592068431376116m"
+      data-normal="0.3606198808239753m 0.34597235557178135m -0.8661734414853731m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-11" onclick="showWish('11')"
+      data-position="2.1714055673208756m 2.6034192485866128m 0.49125936170577766m"
+      data-normal="0.9279844679197823m -0.025321122141056817m 0.3717575393628974m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-12" onclick="showWish('12')"
+      data-position="1.3890970160447131m 3.7596518476323477m -0.9675140270497986m"
+      data-normal="0.9156308491814317m 0.37120963389743533m -0.15434881188082641m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-13" onclick="showWish('13')"
+      data-position="-1.1872802035863887m 3.93771445537694m 0.6474143310306957m"
+      data-normal="-0.7645453067969322m 0.6204917777150183m 0.1745291598640213m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-14" onclick="showWish('14')"
+      data-position="1.5609992324835031m 2.5100030479669524m -0.7714535352524463m"
+      data-normal="0.9710587925091724m 0.013106428204190597m -0.23848069739573607m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-16" onclick="showWish('16')"
+      data-position="0.6391393521840604m 2.6139361386354945m -1.9375996551380386m"
+      data-normal="0.8739215222686155m 0.32008509099304194m -0.3657959915577015m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-17" onclick="showWish('17')"
+      data-position="2.242191950336846m 1.895695323163054m -0.34321973414632545m"
+      data-normal="0.8459350886718631m 0.43058466936513834m 0.31462782499556813m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-18" onclick="showWish('18')"
+      data-position="1.4501233887563734m 2.492272098417347m -1.7310960774815167m"
+      data-normal="-0.08588878767307623m 0.09912120311308059m -0.9913617418709807m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-19" onclick="showWish('19')"
+      data-position="1.4792011824877684m 3.138363166787271m 0.773630120350357m"
+      data-normal="-0.12150036801648668m 0.4629961455067842m 0.8779932971371246m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-20" onclick="showWish('20')"
+      data-position="1.2580263416962998m 2.7121284095765206m 1.63978857296013m"
+      data-normal="0.8526297833201772m 0.5124447125502453m -0.10209245405359066m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-21" onclick="showWish('21')"
+      data-position="-0.17923597124687718m 3.8292894723863524m 0.7881544143549688m"
+      data-normal="-0.0015186214659011594m 0.3032542276198568m 0.952908477882072m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-22" onclick="showWish('22')"
+      data-position="-1.5258022654635655m 2.527696942204024m -1.4145356987070938m"
+      data-normal="-0.7854262247523162m 0.23352083576595864m -0.5732134547744776m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="ring-container" slot="hotspot-23" onclick="showWish('23')"
+      data-position="-0.8455322970103613m 2.640812062245338m -1.8925768630212363m"
+      data-normal="-0.930666949945565m -0.015692735300036762m -0.3655308008059269m"
+      data-visibility-attribute="visible">
+      <div class="ringring"></div>
+      <div class="circle"></div>
+</div>
+  <div class="progress-bar hide" slot="progress-bar">
+      <div class="update-bar"></div>
+  </div>
+ <!-- <div slot="ar-button" id="ar-button">
+      View in your space
+ </div>
+  <div id="ar-prompt">
+      <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
+  </div>-->
+  <div class="overlay-loading">
+    <!--<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="z-index:20;position:absolute;margin: auto; background: transparent; display: block; shape-rendering: auto;" width="200px" height="200px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+        <circle cx="50" cy="50" fill="none" stroke="#ffffff" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138">
+          <animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform>
+        </circle>
+        </svg>-->
+        <div class="loading-text">
+            در حال بارگزاری...
+        </div>
+  </div>
+</model-viewer>
+@endsection
+@push('scripts')
+<script  src="{{asset('assets/js/script.js')}}"></script>
+    <script>
+        function onModelLoaded(modelViewer){
+            setTimeout(()=>{
+                document.querySelector(".overlay-loading").classList.add("d-none")
+            },300)
+            return ;
+            console.log(modelViewer)
+            modelViewer.cameraControls=true
+            setTimeout(()=>{
+                modelViewer.zoom(30)
+                modelViewer.cameraControls=false
+            },500)
+            // modelViewer.cameraControls=false
+  const orbitCycle = [
+    '45deg 55deg 4m',
+    '-60deg 110deg 2m',
+    modelViewer.cameraOrbit
+  ];
+
+//   setInterval(() => {
+//     const currentOrbitIndex = orbitCycle.indexOf(modelViewer.cameraOrbit);
+//     modelViewer.cameraOrbit =
+//         orbitCycle[(currentOrbitIndex + 1) ];
+//   }, 3000);
+        }
+    </script>
+@endpush
