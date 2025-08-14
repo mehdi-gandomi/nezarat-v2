@@ -36,7 +36,7 @@ Route::get('ajax/cities', function (){
 	return City::whereIn("province_id",$provinces)->get();
 });
 Route::post('ajax/otp/send', '\App\Http\Controllers\OtpController@generate');
-Route::post('ajax/otp/validate', '\App\Http\Controllers\OtpController@validate');
+Route::post('ajax/otp/validate', '\App\Http\Controllers\OtpController@validate_otp');
 Route::get('ajax/offices', function (){
 	if(!request('province_id')) return [
 		'ok'=>false,
@@ -52,6 +52,11 @@ Route::get('ajax/offices', function (){
 
 Route::get('/', function () {
     return redirect('/admin/login');
+});
+
+// Test route for OTP API (remove in production)
+Route::get('/test-otp', function () {
+    return view('test-otp');
 });
 
 Route::get('/complaint','\App\Http\Controllers\ComplaintController@show_form');

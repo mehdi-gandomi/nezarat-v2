@@ -29,7 +29,11 @@ class User extends Authenticatable
         'mobile',
 		'user_type',
         'office_code',
-		'provinces'
+		'provinces',
+        'inspection_manager',
+        'inspection_manager_phone',
+        'inspection_expert',
+        'inspectors_list'
     ];
 
     /**

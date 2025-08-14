@@ -58,7 +58,7 @@ class Otp extends Model
         $check_otp = self::where($login_type,$data[$login_type])
             // ->where("reason",$reason)
             ->where(function($query){
-                $query->where('created_at','>=',Carbon::now()->addMinutes('-2'));
+                $query->where('created_at','>=',Carbon::now()->subMinutes(2));
                 $query->whereStatus("PENDING");
                 // $query->where('attemtps','<=',config("Otp.max_attempts"));
             })->orderby("created_at","desc")->orderby("updated_at","desc")->first();
@@ -82,7 +82,7 @@ class Otp extends Model
         $check_otp = self::where("user_id",$user->getKey())
             ->where("reason",$reason)
             ->where(function($query){
-                $query->where('created_at','>=',Carbon::now()->addMinutes('-'.config("Otp.validation_minutes")));
+                $query->where('created_at','>=',Carbon::now()->subMinutes(config("Otp.validation_minutes", 10)));
                 $query->whereStatus("PENDING");
                 // $query->where('attemtps','<=',config("Otp.max_attempts"));
             })->orderby("created_at","desc")->orderby("updated_at","desc")->first();

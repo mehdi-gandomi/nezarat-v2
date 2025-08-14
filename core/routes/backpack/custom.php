@@ -31,4 +31,5 @@ Route::group([
 	
 	Route::post('report', 'ReportController@post_report');
 	Route::post('report/export', 'ReportController@excelExport');
+    Route::crud('office-document', 'OfficeDocumentCrudController');
 }); // this should be the absolute last line of this file

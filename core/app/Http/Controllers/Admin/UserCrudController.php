@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Requests\UserRequest;
 use App\Models\City;
 use App\Models\Province;
+use App\Models\UserGroup;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Http\Requests\UserStoreRequest as StoreRequest;
@@ -68,37 +69,7 @@ class UserCrudController extends CrudController
 			
         ]);
 
-        if (backpack_pro()) {
-            // Role Filter
-            // $this->crud->addFilter(
-            //     [
-            //         'name'  => 'role',
-            //         'type'  => 'dropdown',
-            //         'label' => trans('backpack::permissionmanager.role'),
-            //     ],
-            //     config('permission.models.role')::all()->pluck('name', 'id')->toArray(),
-            //     function ($value) { // if the filter is active
-            //         $this->crud->addClause('whereHas', 'roles', function ($query) use ($value) {
-            //             $query->where('role_id', '=', $value);
-            //         });
-            //     }
-            // );
-
-            // // Extra Permission Filter
-            // $this->crud->addFilter(
-            //     [
-            //         'name'  => 'permissions',
-            //         'type'  => 'select2',
-            //         'label' => trans('backpack::permissionmanager.extra_permissions'),
-            //     ],
-            //     config('permission.models.permission')::all()->pluck('name', 'id')->toArray(),
-            //     function ($value) { // if the filter is active
-            //         $this->crud->addClause('whereHas', 'permissions', function ($query) use ($value) {
-            //             $query->where('permission_id', '=', $value);
-            //         });
-            //     }
-            // );
-        }
+       
     }
 
     public function setupCreateOperation()
@@ -200,21 +171,91 @@ class UserCrudController extends CrudController
 
         $provinces=Province::all()->keyBy('id')->pluck('name')->toArray();
 		array_unshift($provinces,"ستاد");
+        
+        // Get user groups from database
+        $userGroups = UserGroup::all()->pluck('name', 'id')->toArray();
+        
         $this->crud->addFields([
             [   // Hidden
                 'name'  => 'user_type',
                 'type'  => 'hidden',
                 'value' => '4',
             ],
+            [   // User Group Select
+                'name'        => 'user_group',
+                'label'       => 'گروه کاربری',
+                'type'        => 'select2_from_array',
+                'options'     => $userGroups,
+                'allows_null' => false,
+                'default'     => 1,
+                'attributes'     => [
+                    'class' => 'form-group col-md-6',
+                    'id' => 'user_group_select'
+                ],
+            ],
             [
                 'name'  => 'first_name',
                 'label' => 'نام',
                 'type'  => 'text',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6 '
+                ],
             ],
+
             [
                 'name'  => 'last_name',
                 'label' => 'نام خانوادگی',
                 'type'  => 'text',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6 '
+                ],
+            ],
+
+            [
+                'name'  => 'inspection_manager',
+                'label' => 'مدیر بازرسی',
+                'type'  => 'text',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6 inspection-manager-field',
+                    'style' => 'display: none;'
+                ],
+            ],
+            [
+                'name'  => 'inspection_expert',
+                'label' => 'کارشناس مسئول بازرسی',
+                'type'  => 'text',
+                'wrapper' => [
+                    'class' => 'form-group col-md-6 inspection-expert-field',
+                    'style' => 'display: none;'
+                ],
+            ],
+            
+            [   // repeatable
+                'name'  => 'inspectors_list',
+                'label' => 'لیست بازرسین',
+                'type'  => 'repeatable',
+                'fields' => [ // also works as: "fields"
+                    [
+                        'name'    => 'name',
+                        'type'    => 'text',
+                        'label'   => 'نام و نام خانوادگی',
+                        // 'wrapper' => ['class' => 'form-group col-md-4'],
+                    ],
+              
+                ],
+            'wrapper' => [
+                    'class' => 'form-group col-md-12 inspectors-list-field',
+                    'style' => 'display: none;'
+                ],
+                // optional
+                'new_item_label'  => 'اضافه کردن بازرس', // customize the text of the button
+                'init_rows' => 2, // number of empty rows to be initialized, by default 1
+                // 'min_rows' => 2, // minimum rows allowed, when reached the "delete" buttons will be hidden
+                // 'max_rows' => 2, // maximum rows allowed, when reached the "new item" button will be hidden
+                // allow reordering?
+                'reorder' => false, // show up&down arrows next to each row
+                // 'reorder' => 'order', // show arrows AND add a hidden subfield with that name (value gets updated when rows move)
+                // 'reorder' => ['name' => 'order', 'type' => 'number', 'attributes' => ['data-reorder-input' => true]], // show arrows AND add a visible number subfield
             ],
             [
                 'name'  => 'avatar',
@@ -229,6 +270,7 @@ class UserCrudController extends CrudController
                 'allows_null' => false,
                 'default'     => '',
                 'allows_multiple' => true, // OPTIONAL; needs you to cast this to array in your model;
+               
             ],
             [
                 'name'  => 'mobile',
@@ -279,6 +321,59 @@ class UserCrudController extends CrudController
             //         ],
             //     ],
             // ],
+        ]);
+        
+        // Add JavaScript for conditional field display
+        $this->crud->addField([
+            'name' => 'conditional_fields_script',
+            'type' => 'custom_html',
+            'value' => '
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        function toggleFields() {
+                            var userGroupSelect = document.getElementById("user_group_select");
+                            var inspectorsListField = document.querySelector(".inspectors-list-field");
+                            var inspectionExpertField = document.querySelector(".inspection-expert-field");
+                            var inspectionManagerField = document.querySelector(".inspection-manager-field");
+                            
+                            if (userGroupSelect && inspectorsListField && inspectionExpertField && inspectionManagerField) {
+                                var selectedGroup = userGroupSelect.value;
+                                inspectorsListField.style.display =  "none";
+                                    inspectionExpertField.style.display = "none";
+                                    inspectionManagerField.style.display = "none";
+                                if (selectedGroup == "2") {
+                                    inspectorsListField.style.display =  "block";
+                                    inspectionExpertField.style.display = "block";
+                                    inspectionManagerField.style.display = "block";
+                                } 
+                            }
+                        }
+                        
+                        // Initial call
+                        toggleFields();
+                        
+                        // For Select2 fields, we need to use jQuery and Select2 events
+                        // Wait a bit for Select2 to initialize
+                        setTimeout(function() {
+                            if (typeof $ !== "undefined" && $.fn.select2) {
+                                $("#user_group_select").on("select2:select select2:unselect", function(e) {
+                                    console.log("Select2 change detected:", e);
+                                    toggleFields();
+                                });
+                            } else {
+                                // Fallback to regular change event
+                                var userGroupSelect = document.getElementById("user_group_select");
+                                if (userGroupSelect) {
+                                    userGroupSelect.addEventListener("change", function(e) {
+                                        console.log("Regular change event:", e);
+                                        toggleFields();
+                                    });
+                                }
+                            }
+                        }, 500);
+                    });
+                </script>
+            '
         ]);
     }
 }

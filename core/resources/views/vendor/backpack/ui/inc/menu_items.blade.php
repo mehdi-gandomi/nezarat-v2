@@ -32,3 +32,5 @@
 {{-- <x-backpack::menu-item title="Inspection log employees" icon="la la-question" :link="backpack_url('inspection-log-employee')" /> --}}
 {{----}}
 
+
+<x-backpack::menu-item title="{{__('Office documents')}}" icon="la la-question" :link="backpack_url('office-document')" />
