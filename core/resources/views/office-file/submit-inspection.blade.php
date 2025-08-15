@@ -181,7 +181,7 @@
                                 </td>
                                 <td class="text-right">
                                     <strong>میزان تحصیلات و رشته تحصیلی:</strong>
-                                    <span>{{ $crud->entry->field_of_study }}</span>
+                                    <span>{{ $crud->entry->educational_level }} - {{ $crud->entry->field_of_study }}</span>
                                 </td>
 
                             </tr>
@@ -196,6 +196,16 @@
                                     <strong>کد دفتر:</strong>
                                     <span>{{ $crud->entry->office_code }}</span>
                                 </td>
+
+                            </tr>
+                            <tr>
+                                <td class="text-right">
+                                    <strong>نوع دفتر:</strong>
+                                    <span>
+                                    دفتر خدمات قضایی - {{$crud->entry->has_document_office ? "دفتر اسناد"}} - {{$crud->entry->has_marriage_office ? "دفتر ازدواج":""}} - {{$crud->entry->has_divorce_office ? "دفتر طلاق":""}}
+                                    </span>
+                                </td>
+                              
 
                             </tr>
                                 <tr>
