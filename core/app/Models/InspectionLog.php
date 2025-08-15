@@ -32,7 +32,8 @@ class InspectionLog extends Model
 	"lng",
 	'read_at',
 	'inspection_type',
-	'inspection_season'
+	'inspection_season',
+    'recommendations_and_criticisms'
     ];
     public $casts=[
         'attachments'=>'array',

@@ -28,8 +28,12 @@ Route::group([
     // Route::crud('user', 'UserCrudController');
     Route::crud('complaint', 'ComplaintCrudController');
 	Route::get('report', 'ReportController@report');
-	
+
 	Route::post('report', 'ReportController@post_report');
 	Route::post('report/export', 'ReportController@excelExport');
     Route::crud('office-document', 'OfficeDocumentCrudController');
+    Route::crud('inspection-order', 'InspectionOrderCrudController');
+
+    // Office Reports route
+    Route::get('office-reports', 'OfficeReportsController@index')->name('office-reports.index');
 }); // this should be the absolute last line of this file

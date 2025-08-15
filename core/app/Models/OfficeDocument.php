@@ -22,7 +22,9 @@ class OfficeDocument extends Model
     // public $timestamps = false;
     // protected $guarded = ['id'];
     protected $fillable = ['user_id', 'office_code', 'name', 'inspection_date', 'files'];
-    // protected $hidden = [];
+    protected $casts = [
+        'files'=>'array'
+    ];
 
     /*
     |--------------------------------------------------------------------------

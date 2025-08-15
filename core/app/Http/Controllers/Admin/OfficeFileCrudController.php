@@ -34,7 +34,7 @@ class OfficeFileCrudController extends CrudController
      */
     public function setup()
     {
- 
+
         CRUD::setModel(\App\Models\OfficeFile::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/office-file');
         CRUD::setEntityNameStrings('office file', 'office files');
@@ -79,6 +79,7 @@ class OfficeFileCrudController extends CrudController
         //     ]
         // ]);
         CRUD::addButtonFromModelFunction('line', 'inspection_logs', 'inspectionLogs', 'beginning');
+        CRUD::addButtonFromModelFunction('line', 'old_inspections', 'oldInspections', 'beginning');
         $allProvinces=[];
         $provinces=auth('backpack')->user()->provinces;
 		if(auth('backpack')->user()->user_type == 3){
@@ -89,7 +90,7 @@ class OfficeFileCrudController extends CrudController
 		}else{
 				if($provinces){
 					$allProvinces=Province::whereIn("id",$provinces)->get()->keyBy('id')->pluck('name', 'id')->toArray();
-					CRUD::addClause('whereIn', 'province_id', $provinces);		
+					CRUD::addClause('whereIn', 'province_id', $provinces);
 				}
 		}
 
@@ -101,12 +102,61 @@ class OfficeFileCrudController extends CrudController
             ->whenActive(function($values) {
             CRUD::addClause('whereIn', 'province_id', json_decode($values,true));
             });
-			    CRUD::filter('city_id')
+			            CRUD::filter('city_id')
             ->label('انتخاب شهر')
             ->type('select2_city_multiple')
             ->whenActive(function($values) {
             CRUD::addClause('whereIn', 'city_id', json_decode($values,true));
             });
+
+        // Add search functionality based on office_code
+        CRUD::filter('office_code_search')
+            ->label('جستجو بر اساس کد دفتر')
+            ->type('text')
+            ->whenActive(function($value) {
+                CRUD::addClause('where', 'office_code', 'LIKE', "%$value%");
+            });
+
+        // Handle violation status filtering from office-reports page
+        if (request()->has('violation_status')) {
+            $violationStatus = request()->get('violation_status');
+
+            switch ($violationStatus) {
+                case 'with_violations':
+                    // Get office codes that have violations (adapt = 0)
+                    $officeCodesWithViolations = \App\Models\InspectionLog::where('adapt', 0)
+                        ->distinct('office_code')
+                        ->pluck('office_code')
+                        ->toArray();
+                    CRUD::addClause('whereIn', 'office_code', $officeCodesWithViolations);
+                    break;
+
+                case 'without_violations':
+                    // Get office codes that have no violations (adapt = 1)
+                    $officeCodesWithoutViolations = \App\Models\InspectionLog::where('adapt', 1)
+                        ->distinct('office_code')
+                        ->pluck('office_code')
+                        ->toArray();
+                    CRUD::addClause('whereIn', 'office_code', $officeCodesWithoutViolations);
+                    break;
+
+                case 'requiring_defect_removal':
+                    // Get office codes that require defect removal
+                    $officeCodesRequiringDefectRemoval = \App\Models\InspectionLog::where('adapt', 0)
+                        ->where('requires_second_inspection', 1)
+                        ->distinct('office_code')
+                        ->pluck('office_code')
+                        ->toArray();
+                    CRUD::addClause('whereIn', 'office_code', $officeCodesRequiringDefectRemoval);
+                    break;
+
+                case 'sent_to_board':
+                    // Get office codes sent to board (you may need to adjust this based on your business logic)
+                    $officeCodesSentToBoard = []; // This would need to be implemented based on your specific logic
+                    CRUD::addClause('whereIn', 'office_code', $officeCodesSentToBoard);
+                    break;
+            }
+        }
     //         CRUD::filter('description')
 
     // ->type('text')

@@ -1,6 +1,7 @@
 @php
     $employees = json_decode($crud->entry->employees, true);
     $categories = \App\Models\GeneralQuestionCategory::with('questions')->get();
+    $currentInspectionOrder = \App\Models\InspectionOrder::getActiveOrder();
 @endphp
 @extends(backpack_view('blank'))
 
@@ -96,9 +97,49 @@
                 <input type="hidden" name="office_manager_signature" id="office_manager_signature" />
                 <input type="hidden" name="legal_expert_signature" id="legal_expert_signature" />
 				<h5 class="text-center my-3">ثبت صورتجلسه</h5>
+                       <!-- حکم بازرسی Card -->
+                       <div class="card mb-3">
+                        <div class="card-header">
+                            <h6 class="text-center">اطلاعات ماموریت بازرسی</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="border p-3 h-100">
+                                        <div class="mb-2">
+                                            <strong>مرجع تقاضا کننده:</strong>
+                                            <span>(کانون دفاتر خدمات قضایی کشور)</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>نام بازرس/بازرسین:</strong>
+                                            <span>({{ auth('backpack')->user()->inspectors_list ? implode(',',array_map(function($item){
+                                                return $item['name'];
+                                            },auth('backpack')->user()->inspectors_list)):'-' }})</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-3 h-100">
+                                        <div class="mb-2">
+                                            <strong>تاریخ:</strong>
+                                            <span>({{ $currentInspectionOrder ? $currentInspectionOrder->claim_date_start->format('Y/m/d') : 'بصورت سیستمی' }})</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>شماره ابلاغ بازرسی:</strong>
+                                            <span>({{ $currentInspectionOrder ? $currentInspectionOrder->claim_no : 'بصورت سیستمی' }})</span>
+                                        </div>
+                                        <div class="mb-2">
+                                            <strong>تاریخ ابلاغ بازرسی:</strong>
+                                            <span>({{ $currentInspectionOrder ? $currentInspectionOrder->claim_date_start->format('Y/m/d') : 'بصورت سیستمی' }})</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 <div class="card">
                     <div class="card-header">
-                        <h6 class="text-center">مشخصات عمومی</h6>
+                        <h6 class="text-center">مشخصات مدیر</h6>
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered ">
@@ -131,6 +172,32 @@
                                     </td>
 
                                 </tr>
+                                <tr>
+                                <td class="text-right">
+                                    <strong>تاریخ صدور پروانه دفتر:</strong>
+                                    <span>
+                                        {{$crud->entry->license_issue_date}}
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    <strong>میزان تحصیلات و رشته تحصیلی:</strong>
+                                    <span>{{ $crud->entry->field_of_study }}</span>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td class="text-right">
+                                    <strong>تاریخ شروع به کار:</strong>
+                                    <span>
+                                        {{$crud->entry->activity_start_date}}
+                                    </span>
+                                </td>
+                                <td class="text-right">
+                                    <strong>کد دفتر:</strong>
+                                    <span>{{ $crud->entry->office_code }}</span>
+                                </td>
+
+                            </tr>
                                 <tr>
                                     <td class="text-right">
                                         <strong>دوره بازرسی:</strong>
@@ -178,6 +245,9 @@
 
                     </div>
                 </div>
+
+
+
                 @if ($employees && count($employees))
                     <div class="card" id="employees">
                         <div class="card-header">
@@ -400,15 +470,15 @@
 													<div class="col-lg-4">
 														<label for="cctv_username">یوزرنیم دوربین</label>
 														<input type="text" name="cctv_username" id="cctv_username" class="form-control" />
-													</div>	
+													</div>
 													<div class="col-lg-4">
 														<label for="cctv_password">پسورد دوربین</label>
 														<input type="text" name="cctv_password" id="cctv_password" class="form-control" />
-													</div>	
+													</div>
 													<div class="col-lg-4">
 														<label for="cctv_port">پورت دوربین</label>
 														<input type="text" name="cctv_port" id="cctv_port" class="form-control" />
-													</div>	
+													</div>
 												</div>
 											</div>
 										@endif
@@ -421,9 +491,18 @@
                                 <label for="">درصد انطباق</label>
                                 <input type="number" class="form-control" name="category[{{$category->id}}][adapt_percent]">
                             </div>-->
-							
+
                         </section>
                     @endforeach
+                    <h4 class="wizard-header">انتقادات و پیشنهادات و اظهارات مدیر دفتر</h4>
+                    <section class="wizard-body">
+                        <div>
+                            <div class="form-group">
+                                <label for="">انتقادات و پیشنهادات و اظهارات مدیر دفتر:</label>
+                                <textarea class="form-control" name="recommendations_and_criticisms" id="" cols="30" rows="10"></textarea>
+                            </div>
+                        </div>
+                    </section>
                     <h4 class="wizard-header">صورت جلسه و تعهدات</h4>
                     <section class="wizard-body">
                         <div>
@@ -531,7 +610,7 @@
 		if (this.value == '2') {
 			$("#periodic-inspection-type").removeClass('d-none')
 		}
-		
+
 	});
 	});
 // 	let portrait = window.matchMedia("(orientation: portrait)");
@@ -544,7 +623,7 @@
 // 			e.preventDefault()
 // 			screen.orientation.lock('portrait-primary');
 // 			return false;
-// 		} 
+// 		}
 // 		return true;
 // 	})
 // })

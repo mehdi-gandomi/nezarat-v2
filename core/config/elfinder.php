@@ -26,7 +26,7 @@ return [
     |    ]
     */
     'disks' => [
-        // 'uploads',
+        'uploads',
     ],
 
     /*
@@ -64,7 +64,47 @@ return [
     |
     */
 
-    'roots' => null,
+    'roots' => [
+        [
+            'driver'        => 'LocalFileSystem',
+            'path'          => dirname(base_path()) . '/uploads',
+            'URL'           => '/',
+            'alias'         => 'uploads',
+            'mimeDetect'    => 'mime_content_type',
+            'allowMkdir'    => true,
+            'allowMkfile'   => true,
+            'allowRename'   => true,
+            'allowDelete'   => true,
+            'allowUpload'   => true,
+            'allowDownload' => true,
+            'uploadDeny'    => [],
+            'uploadAllow'   => ['image', 'text/plain', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+            'uploadOrder'   => ['deny', 'allow'],
+            'uploadMaxSize' => '10M',
+            'defaults'      => [
+                'read'   => true,
+                'write'  => true,
+                'locked' => false,
+                'hidden' => false,
+            ],
+            'attributes'    => [
+                [
+                    'pattern' => '/\.(git|svn|htaccess|htpasswd)$/',
+                    'read'    => false,
+                    'write'   => false,
+                    'locked'  => true,
+                    'hidden'  => true,
+                ],
+                [
+                    'pattern' => '/\.(jpg|jpeg|png|gif|bmp|webp)$/',
+                    'read'    => true,
+                    'write'   => true,
+                    'locked'  => false,
+                    'hidden'  => false,
+                ],
+            ],
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -76,7 +116,22 @@ return [
     |
     */
 
-    'options' => [],
+    'options' => [
+        'bind' => [
+            'upload.presave' => [
+                'Plugin.AutoResize.onUpLoadPreSave',
+            ],
+        ],
+        'plugin' => [
+            'AutoResize' => [
+                'enable'         => true,
+                'maxWidth'       => 1920,
+                'maxHeight'      => 1920,
+                'quality'        => 95,
+                'targetType'     => IMG_GIF | IMG_JPG | IMG_PNG | IMG_WEBP,
+            ],
+        ],
+    ],
 
     /*
     |--------------------------------------------------------------------------
@@ -88,6 +143,8 @@ return [
     |
     */
     'root_options' => [
-
+        'acceptedName' => '/^[^\.].*$/',
+        'uploadMaxSize' => '10M',
     ],
+
 ];

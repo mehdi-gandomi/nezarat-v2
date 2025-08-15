@@ -8,7 +8,8 @@
         @basset('https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.min.css')
 
         {{-- elFinder JS (REQUIRED) --}}
-        @basset('https://cdn.bootcdn.net/ajax/libs/elfinder/2.1.62/js/elfinder.min.js')
+
+        <script src="{{asset('assets/elfinder/elfinder.min.js')}}"></script>
 
         {{-- elFinder translation (OPTIONAL) --}}
         @if($locale)

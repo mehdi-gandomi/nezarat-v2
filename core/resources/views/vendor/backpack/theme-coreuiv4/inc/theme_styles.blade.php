@@ -3,3 +3,4 @@
 
 {{-- Custom Backpack Rules --}}
 @basset(base_path('vendor/backpack/theme-coreuiv4/resources/assets/css/coreui4.css'))
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">

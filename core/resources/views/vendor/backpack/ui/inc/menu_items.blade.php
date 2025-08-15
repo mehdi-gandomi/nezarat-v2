@@ -26,6 +26,7 @@
 <!--complaint-->
 <x-backpack::menu-item title="{{__('Complaints')}}" icon="la la-question" :link="backpack_url('complaint')" />
 <x-backpack::menu-item title="{{__('Report')}}" icon="la la-question" :link="backpack_url('report')" />
+<x-backpack::menu-item title="گزارشات دفاتر" icon="la la-question" :link="backpack_url('office-reports')" />
 @endif
 
 
@@ -34,3 +35,4 @@
 
 
 <x-backpack::menu-item title="{{__('Office documents')}}" icon="la la-question" :link="backpack_url('office-document')" />
+<x-backpack::menu-item title="{{__('Inspection orders')}}" icon="la la-question" :link="backpack_url('inspection-order')" />

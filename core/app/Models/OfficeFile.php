@@ -20,6 +20,10 @@ class OfficeFile extends Model
     public function inspectionLogs($crud=false){
         return '<a class="btn btn-sm btn-link" href="'.route('inspection-log.index',['office_code'=>$this->office_code]).'" data-toggle="tooltip" title=""><i class="la la-list"></i> لیست سوابق بازرسی</a>';
     }
+
+    public function oldInspections($crud=false){
+        return '<a class="btn btn-sm btn-link" href="'.route('office-document.index',['office_code'=>$this->office_code]).'" data-toggle="tooltip" title=""><i class="la la-history"></i> بازرسی های قدیم</a>';
+    }
 	public function province(){
 		return $this->belongsTo(Province::class);
 	}

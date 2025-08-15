@@ -5,7 +5,7 @@
     $themeStylesheetVersion = '3.0.0';
 @endphp
 
-@basset('https://cdn.bootcdn.net/ajax/libs/elfinder/2.1.62/css/elfinder.min.css')
+<link rel="stylesheet" href="{{asset('assets/elfinder/elfinder.min.css')}}">
 @basset('https://cdn.jsdelivr.net/gh/RobiNN1/elFinder-Material-Theme@'.$themeStylesheetVersion.'/Material/css/theme.min.css')
 @basset('https://cdn.jsdelivr.net/gh/RobiNN1/elFinder-Material-Theme@'.$themeStylesheetVersion.'/Material/images/loading.svg', false)
 @basset('https://cdn.jsdelivr.net/gh/RobiNN1/elFinder-Material-Theme@'.$themeStylesheetVersion.'/Material/font/material.eot', false)

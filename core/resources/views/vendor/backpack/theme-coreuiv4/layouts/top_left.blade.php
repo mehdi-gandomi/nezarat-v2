@@ -12,7 +12,7 @@
   @include(backpack_view('inc.sidebar'))
 
   <div class="wrapper d-flex flex-column min-vh-100 bg-light">
-    
+
     @include(backpack_view('inc.main_header'))
 
     <div class="app-body flex-grow-1 px-2">
@@ -32,7 +32,7 @@
           @yield('before_content_widgets')
 
           @yield('content')
-          
+
           @yield('after_content_widgets')
 
         </div>
