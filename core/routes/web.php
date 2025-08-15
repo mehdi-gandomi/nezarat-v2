@@ -34,7 +34,7 @@ Route::get('ajax/cities', function (){
 	$provinces=request('province_id');
 	$provinces=$provinces ? explode(",",$provinces):[];
 	return City::whereIn("province_id",$provinces)->get();
-});
+})->name("cities");
 Route::post('ajax/otp/send', '\App\Http\Controllers\OtpController@generate');
 Route::post('ajax/otp/validate', '\App\Http\Controllers\OtpController@validate_otp');
 Route::get('ajax/offices', function (){
@@ -43,7 +43,7 @@ Route::get('ajax/offices', function (){
 		'data'=>[]
 	];
 	$offices=OfficeFile::where("province_id",request('province_id'))->select('first_name','last_name','office_code')->get();
-	
+
 	return [
 		'ok'=>true,
 		'data'=>$offices

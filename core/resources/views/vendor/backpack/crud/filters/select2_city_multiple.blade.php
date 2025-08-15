@@ -1,6 +1,7 @@
 @php
 	if(request('province_id')){
 		$province=json_decode(request('province_id'),true);
+
 		$citites=\App\Models\City::whereIn('province_id',$province)->get();
 	}
 @endphp
@@ -163,7 +164,7 @@
 				});
 
 				$("#filter_provinceId").on("change",function(e){
-					fetch("https://inspector.sahrab.com/ajax/cities?province_id="+$("#filter_provinceId").select2('val').join(','))
+					fetch("{{route('cities')}}?province_id="+$("#filter_provinceId").select2('val').join(','))
 						.then(res=>res.json())
 						.then(res=>{
 							if(res){

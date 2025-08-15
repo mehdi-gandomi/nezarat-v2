@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Requests\OfficeFileRequest;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 use App\Models\City;
@@ -11,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\OfficeFile;
 use App\Models\InspectionLog;
 use Detection\MobileDetect;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 /**
  * Class OfficeFileCrudController
  * @package App\Http\Controllers\Admin
@@ -117,6 +118,61 @@ class OfficeFileCrudController extends CrudController
                 CRUD::addClause('where', 'office_code', 'LIKE', "%$value%");
             });
 
+        // Add current_office_status filter
+        CRUD::filter('current_office_status')
+            ->label('وضعیت دفتر')
+            ->type('select2_multiple')
+            ->values([
+                'active' => 'فعال',
+                'deactive' => 'غیرفعال'
+            ])
+            ->whenActive(function($values) {
+                CRUD::addClause('whereIn', 'current_office_status', json_decode($values,true));
+            });
+
+        // Add current_office_status_reason filter (only shown when deactive is selected)
+        CRUD::filter('current_office_status_reason')
+            ->label('دلیل غیرفعال بودن')
+            ->type('select2_multiple')
+            ->values([
+                'resign' => 'استعفا',
+                'death' => 'فوت',
+                'transfer' => 'انتقال',
+                'permanent_cancel' => 'انصراف دائمی',
+                'permanent_suspension' => 'تعلیق دائم',
+                'temp_suspension' => 'تعلیق موقت'
+            ])
+            ->whenActive(function($values) {
+                CRUD::addClause('whereIn', 'current_office_status_reason', json_decode($values,true));
+            });
+
+        // Handle violation status filtering from office-reports page
+        // This will be handled in setupListOperation method
+    //         CRUD::filter('description')
+
+    // ->type('text')
+    // ->whenActive(function($value) {
+    //   // CRUD::addClause('where', 'description', 'LIKE', "%$value%");
+    // });
+    }
+
+    /**
+     * Define what happens when the List operation is loaded.
+     *
+     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
+     * @return void
+     */
+    protected function setupListOperation()
+    {
+        // CRUD::setFromDb(); // set columns from db columns.
+        $provinces=auth('backpack')->user()->provinces;
+
+        if($provinces && in_array(0,$provinces)){
+			//nothing
+		}else if($provinces){
+			CRUD::addClause('whereIn', 'province_id', $provinces);
+		}
+
         // Handle violation status filtering from office-reports page
         if (request()->has('violation_status')) {
             $violationStatus = request()->get('violation_status');
@@ -157,30 +213,6 @@ class OfficeFileCrudController extends CrudController
                     break;
             }
         }
-    //         CRUD::filter('description')
-
-    // ->type('text')
-    // ->whenActive(function($value) {
-    //   // CRUD::addClause('where', 'description', 'LIKE', "%$value%");
-    // });
-    }
-
-    /**
-     * Define what happens when the List operation is loaded.
-     *
-     * @see  https://backpackforlaravel.com/docs/crud-operation-list-entries
-     * @return void
-     */
-    protected function setupListOperation()
-    {
-        // CRUD::setFromDb(); // set columns from db columns.
-        $provinces=auth('backpack')->user()->provinces;
-
-        if($provinces && in_array(0,$provinces)){
-			//nothing
-		}else if($provinces){
-			CRUD::addClause('whereIn', 'province_id', $provinces);
-		}
         /**
          * Columns can be defined using the fluent syntax:
          * - CRUD::column('price')->type('number');
@@ -190,8 +222,40 @@ class OfficeFileCrudController extends CrudController
         CRUD::column('first_name')->label("نام");
         CRUD::column('last_name')->label("نام خانوادگی");
         CRUD::column('computed_gender')->label("جنسیت");
-CRUD::column('province.name')->label("استان");
+        CRUD::column('province.name')->label("استان");
         CRUD::column('city.name')->label("شهر");
+
+        // Add JavaScript for conditional filter display
+        // $this->crud->addField([
+        //     'name' => 'conditional_filter_script',
+        //     'type' => 'custom_html',
+        //     'value' => '
+        //         <script>
+        //             $(document).ready(function() {
+        //                 // Hide the reason filter initially
+        //                 $("#current_office_status_reason_filter").closest(".filter-box").hide();
+
+        //                 // Show/hide reason filter based on status selection
+        //                 $("#current_office_status_filter select").on("select2:select select2:unselect", function(e) {
+        //                     var selectedValue = $(this).val();
+        //                     var reasonFilterBox = $("#current_office_status_reason_filter").closest(".filter-box");
+
+        //                     if (selectedValue === "deactive") {
+        //                         reasonFilterBox.show();
+        //                     } else {
+        //                         reasonFilterBox.hide();
+        //                         // Clear the reason filter when hiding
+        //                         $("#current_office_status_reason_filter select").val("").trigger("select2:select");
+        //                     }
+        //                 });
+
+        //                 // Trigger change on page load to set initial state
+        //                 $("#current_office_status_filter select").trigger("select2:select");
+        //             });
+        //         </script>
+        //     '
+        // ]);
+
     }
 
     /**
@@ -202,7 +266,6 @@ CRUD::column('province.name')->label("استان");
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(OfficeFileRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
 
         /**
@@ -243,9 +306,9 @@ CRUD::column('province.name')->label("استان");
         $image = $base64;  // your base64 encoded
         $image = str_replace('data:image/png;base64,', '', $image);
         $image = str_replace(' ', '+', $image);
-        $imageName = \Str::random(10).'.'.'png';
+        $imageName = Str::random(10).'.'.'png';
         $path=$path."/".$imageName;
-        \Storage::disk("public")->put($path, base64_decode($image));
+        Storage::disk("public")->put($path, base64_decode($image));
         return $path;
     }
     public function submitInspection(Request $request,$id){

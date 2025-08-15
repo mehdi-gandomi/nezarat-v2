@@ -10,7 +10,7 @@
 {{--<x-backpack::menu-item :title="trans('backpack::crud.file_manager')" icon="la la-files-o" :link="backpack_url('elfinder')" />--}}
 <!-- <x-backpack::menu-item title="تنظیمات" icon='la la-cog' :link="backpack_url('setting')" /> -->
 
-@elseif(auth('backpack')->user()->user_type == 3 || in_array(11,auth('backpack')->user()->provinces))
+@elseif(auth('backpack')->user()->user_type == 3 || (auth('backpack')->user()->provinces && is_array(auth('backpack')->user()->provinces) && in_array(11,auth('backpack')->user()->provinces)))
 <x-backpack::menu-item  title="لیست دفاتر" icon="la la-files-o" :link="backpack_url('office-file')" />
 
 {{--<x-backpack::menu-item :title="trans('backpack::crud.file_manager')" icon="la la-files-o" :link="backpack_url('elfinder')" />--}}
